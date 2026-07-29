@@ -23,6 +23,7 @@ import os
 import sys
 import time
 from pathlib import Path
+from tqdm import tqdm
 
 import torch
 import torch.nn as nn
@@ -179,7 +180,9 @@ def train_model(dataset_dir: str, epochs: int, batch_size: int, lr: float, dry_r
     for epoch in range(1, epochs + 1):
         model.train()
         running_loss = 0.0
-        for images, masks in dataloader:
+        
+        progress_bar = tqdm(dataloader, desc=f"Epoch {epoch:02d}/{epochs:02d}", leave=False)
+        for images, masks in progress_bar:
             images = images.to(device)
             masks = masks.to(device)
 
@@ -193,6 +196,7 @@ def train_model(dataset_dir: str, epochs: int, batch_size: int, lr: float, dry_r
             scaler.update()
 
             running_loss += loss.item() * images.size(0)
+            progress_bar.set_postfix({"loss": f"{loss.item():.4f}"})
 
         epoch_loss = running_loss / max(1, len(dataset))
         print(f"  Epoch [{epoch:02d}/{epochs:02d}] - Loss: {epoch_loss:.6f}")
@@ -210,7 +214,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="KRATOS DeepGlobe Model Training Pipeline")
     parser.add_argument("--dataset-dir", type=str, default="./data/dataset", help="Path to DeepGlobe dataset folder")
     parser.add_argument("--download-kaggle", action="store_true", help="Automatically download balraj98/deepglobe-road-extraction-dataset")
-    parser.add_argument("--epochs", type=int, default=5, help="Number of training epochs")
+    parser.add_argument("--epochs", type=int, default=1, help="Number of training epochs")
     parser.add_argument("--batch-size", type=int, default=8, help="Batch size for training")
     parser.add_argument("--lr", type=float, default=1e-3, help="Learning rate")
     parser.add_argument("--dry-run", action="store_true", help="Run synthetic validation dry-run")
