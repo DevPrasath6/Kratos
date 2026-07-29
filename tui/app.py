@@ -18,10 +18,19 @@ ALL_AGENTS = [
     "route_planning",
     "traffic_analysis",
     "resource_allocation",
-    "volunteer_healthcare_dispatch",
+    "volunteer_dispatch",
     "radio_frequency_alert",
-    "notification",
     "report_generation",
+    "notification",
+    "drone_swarm_orchestrator",
+    "weather_monitor",
+    "social_media_distress",
+    "satellite_tasking",
+    "telecom_mesh",
+    "shelter_capacity",
+    "infrastructure_risk",
+    "damage_verification",
+    "supply_logistics",
     "audit",
     "ping",
 ]
@@ -174,9 +183,9 @@ class KratosTextualApp(App):
             log.write("[bold yellow]Available Commands:[/bold yellow]")
             log.write("  [cyan]-help[/cyan]            Show this help manual")
             log.write("  [cyan]-doctor[/cyan]          Run system diagnostics, detect failing agents, and auto-restart them")
-            log.write("  [cyan]-status[/cyan]          Display live status of all 13 KRATOS agents")
+            log.write("  [cyan]-status[/cyan]          Display live status of all 22 KRATOS agents")
             log.write("  [cyan]-nim[/cyan]             Check NVIDIA NIM VLM/LLM endpoint latency and status")
-            log.write("  [cyan]-run pipeline[/cyan]    Execute full 12-agent disaster simulation pipeline")
+            log.write("  [cyan]-run pipeline[/cyan]    Execute full 22-agent disaster simulation pipeline")
             log.write("  [cyan]-clear[/cyan]           Clear terminal log screen")
 
         elif cmd in ["-doctor", "doctor", "-doc"]:
@@ -192,7 +201,7 @@ class KratosTextualApp(App):
                                 failed_agents.append((agent, info.get("last_error", "Unknown error")))
 
                         if not failed_agents:
-                            log.write("[bold green]✓ All 13 agents healthy! No failing agents detected.[/bold green]")
+                            log.write("[bold green]✓ All 22 agents healthy! No failing agents detected.[/bold green]")
                         else:
                             log.write(f"[bold red]Found {len(failed_agents)} failing agent(s):[/bold red]")
                             for ag, err in failed_agents:
