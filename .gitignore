@@ -1,0 +1,23 @@
+*.db
+static/reports/*.pdf
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.env
+venv/
+env/
+node_modules/
+dist/
+build/
+.DS_Store
+
+# Datasets and large binary models
+data/dataset/images/*
+data/dataset/masks/*
+!data/dataset/.gitkeep
+models/*.pt
+models/*.pth
+models/*.bin
+!models/.gitkeep
