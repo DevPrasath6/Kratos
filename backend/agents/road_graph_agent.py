@@ -26,7 +26,8 @@ class RoadGraphAgent(BaseAgent):
             return self.serialize_graph(graph, graph_id, input_data)
 
         if not segments:
-            segments = []
+            graph, graph_id = self.sample_graph()
+            return self.serialize_graph(graph, graph_id, input_data)
 
         tolerance = float(input_data.get("tolerance", 15.0))
         graph, graph_id = self.build_graph_from_segments(segments, tolerance)
