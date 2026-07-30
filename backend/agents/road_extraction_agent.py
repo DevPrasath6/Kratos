@@ -1,11 +1,30 @@
 import base64
 import io
+import os
 import json
 import numpy as np
 import cv2
+import torch
+import torchvision.transforms as T
+from PIL import Image
 from typing import Any, Dict, List
 from agents.base import BaseAgent
 from agents.nim_client import vision_client, NIM_API_KEY
+from models.road_seg_model import KRATOSRoadSegModel
+
+_road_model = None
+_device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+def _get_road_model():
+    global _road_model
+    if _road_model is None:
+        model_path = os.path.join(os.path.dirname(__file__), "..", "models", "kratos_finetuned_segmentation.pt")
+        model = KRATOSRoadSegModel().to(_device)
+        if os.path.exists(model_path):
+            model.load_state_dict(torch.load(model_path, map_location=_device))
+        model.eval()
+        _road_model = model
+    return _road_model
 
 
 class RoadExtractionAgent(BaseAgent):
@@ -61,33 +80,40 @@ class RoadExtractionAgent(BaseAgent):
             except Exception:
                 pass  # Fallback to OpenCV on any error
 
-        # OpenCV Fallback path
-        return self._cv_fallback(image_b64, input_data)
+        # PyTorch model inference path
+        return self._pytorch_inference(image_b64, input_data)
 
-    def _cv_fallback(self, image_b64: str, input_data: Dict[str, Any] = None) -> Dict[str, Any]:
-        """Classical CV: grayscale -> Canny edge detection -> Probabilistic Hough Line Transform."""
+    def _pytorch_inference(self, image_b64: str, input_data: Dict[str, Any] = None) -> Dict[str, Any]:
+        """PyTorch Model Inference + OpenCV Post-Processing."""
         try:
+            model = _get_road_model()
+            
             img_bytes = base64.b64decode(image_b64)
-            nparr = np.frombuffer(img_bytes, np.uint8)
-            img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-
-            if img is None:
-                res = dict(input_data) if input_data else {}
-                res.update({"segments": [], "source": "cv_fallback", "confidence": 0.5})
-                return res
-
-            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-            # Blur & Canny edge detection
-            edges = cv2.Canny(gray, threshold1=10, threshold2=100)
-
-            # Hough Line Transform
+            image = Image.open(io.BytesIO(img_bytes)).convert("RGB")
+            
+            transform = T.Compose([
+                T.Resize((256, 256)),
+                T.ToTensor(),
+                T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+            ])
+            
+            input_tensor = transform(image).unsqueeze(0).to(_device)
+            
+            with torch.no_grad():
+                output = model(input_tensor)
+                mask = (output > 0.5).float().squeeze().cpu().numpy()
+                
+            original_width, original_height = image.size
+            mask_uint8 = (mask * 255).astype(np.uint8)
+            mask_resized = cv2.resize(mask_uint8, (original_width, original_height), interpolation=cv2.INTER_NEAREST)
+            
             lines = cv2.HoughLinesP(
-                edges,
+                mask_resized,
                 rho=1,
                 theta=np.pi / 180,
-                threshold=10,
+                threshold=5,
                 minLineLength=5,
-                maxLineGap=15,
+                maxLineGap=20,
             )
 
             segments: List[List[int]] = []
@@ -100,11 +126,12 @@ class RoadExtractionAgent(BaseAgent):
             res = dict(input_data) if input_data else {}
             res.update({
                 "segments": segments,
-                "source": "cv_fallback",
-                "confidence": 0.5,
+                "source": "pytorch_model",
+                "confidence": 0.9,
             })
             return res
-        except Exception:
+        except Exception as e:
+            print(f"PyTorch inference failed: {e}")
             res = dict(input_data) if input_data else {}
-            res.update({"segments": [], "source": "cv_fallback", "confidence": 0.5})
+            res.update({"segments": [], "source": "pytorch_model_error", "confidence": 0.0})
             return res

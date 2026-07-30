@@ -82,17 +82,19 @@ export const App: React.FC = () => {
     };
   }, []);
 
-  const handleRunPipeline = async () => {
+  const handleRunPipeline = async (payload: any = {}) => {
+    const finalPayload = {
+      use_sample: payload.image_b64 ? false : true,
+      disaster_type: payload.disaster_type || "flood",
+      severity: payload.severity || 4,
+      start_node: 0,
+      target_node: 8,
+      ...payload,
+    };
     const resp = await fetch(`${BACKEND_URL}/api/agents/pipeline/run`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        use_sample: true,
-        disaster_type: "flood",
-        severity: 4,
-        start_node: 0,
-        target_node: 8,
-      }),
+      body: JSON.stringify(finalPayload),
     });
     if (!resp.ok) {
       const err = await resp.json();

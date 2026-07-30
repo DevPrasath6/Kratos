@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { MapContainer, TileLayer, Polyline, CircleMarker } from "react-leaflet";
+import { MapContainer, TileLayer, Polyline, CircleMarker, ImageOverlay } from "react-leaflet";
 import { Play, Upload, Send, Bot, Navigation, RefreshCw, X } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "../components/ui/Card";
 
@@ -9,7 +9,7 @@ import { toast } from "sonner";
 
 interface DashboardPageProps {
   agentStatus: Record<string, any>;
-  onRunPipeline: () => Promise<any>;
+  onRunPipeline: (payload?: any) => Promise<any>;
   onUploadImage: (file: File) => Promise<any>;
   onSegmentImage?: (b64: string) => Promise<any>;
 }
@@ -24,6 +24,8 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
   const [selectedHazard, setSelectedHazard] = useState<string>("flood");
   const [severityPct, setSeverityPct] = useState<number>(38);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [imageBounds, setImageBounds] = useState<[[number, number], [number, number]] | null>(null);
   const [fileInfo, setFileInfo] = useState<{ name: string; size: string } | null>(null);
   const [isRunning, setIsRunning] = useState(false);
   const [showAiDrawer, setShowAiDrawer] = useState(false);
@@ -42,9 +44,9 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
   const [liveNodes, setLiveNodes] = useState<Record<string, [number, number]>>({});
   const [liveEdges, setLiveEdges] = useState<Array<{ u: string; v: string; blocked?: boolean; type?: string }>>([]);
 
-  const fetchLiveGraph = async () => {
+  const fetchLiveGraph = async (graphId: string = "sample_graph_default") => {
     try {
-      const resp = await fetch("http://localhost:8000/api/agents/graph/sample_graph_default");
+      const resp = await fetch(`http://localhost:8000/api/agents/graph/${graphId}`);
       if (resp.ok) {
         const data = await resp.json();
         const graphRes = data?.result;
@@ -78,6 +80,19 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
     if (e.target.files && e.target.files[0]) {
       const f = e.target.files[0];
       setSelectedFile(f);
+      const url = URL.createObjectURL(f);
+      setImageUrl(url);
+      
+      const img = new window.Image();
+      img.onload = () => {
+        const baseLat = 37.7749;
+        const baseLng = -122.4194;
+        const south = baseLat - (img.height / 10000.0);
+        const east = baseLng + (img.width / 10000.0);
+        setImageBounds([[south, baseLng], [baseLat, east]]);
+      };
+      img.src = url;
+
       const sizeMb = (f.size / (1024 * 1024)).toFixed(2);
       setFileInfo({ name: f.name, size: `${sizeMb} MB` });
       toast.success("Tile Selected", { description: `${f.name} (${sizeMb} MB) ready for ingestion.` });
@@ -91,12 +106,19 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
     });
 
     try {
+      let uploadedImageB64 = undefined;
       if (selectedFile) {
         toast.info("Ingesting Satellite Tile", { description: "Sending payload to Image Ingestion Agent..." });
-        await onUploadImage(selectedFile);
+        const res = await onUploadImage(selectedFile);
+        uploadedImageB64 = res?.result?.image_b64;
       }
-      await onRunPipeline();
-      await fetchLiveGraph();
+      const pipelineRes = await onRunPipeline({
+        image_b64: uploadedImageB64,
+        disaster_type: selectedHazard,
+        severity: Math.max(1, Math.floor(severityPct / 10))
+      });
+      const graphId = pipelineRes?.result?.graph_id || "sample_graph_default";
+      await fetchLiveGraph(graphId);
       toast.success("Resilience Pipeline Executed!", {
         description: "All 22 agents finished processing. Map routes updated.",
       });
@@ -351,9 +373,18 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                 </span>
               </div>
             )}
-            <MapContainer center={[37.7749, -122.4094]} zoom={13} style={{ width: "100%", height: "100%", minHeight: "480px" }}>
+            <MapContainer center={[37.7621, -122.4066]} zoom={14} style={{ width: "100%", height: "100%", minHeight: "480px" }}>
               <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" attribution="&copy; OpenStreetMap &copy; CARTO" />
               
+              {/* Display uploaded image directly on map */}
+              {imageUrl && imageBounds && (
+                <ImageOverlay
+                  url={imageUrl}
+                  bounds={imageBounds}
+                  opacity={0.7}
+                />
+              )}
+
               {/* Colorblind-Safe Polylines */}
               {liveEdges.map((e, idx) => {
                 const p1 = liveNodes[e.u];
