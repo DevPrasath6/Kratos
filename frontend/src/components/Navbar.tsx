@@ -52,7 +52,7 @@ export const Navbar: React.FC<NavbarProps> = ({ wsConnected, onRunPipeline }) =>
   const commandItems = [
     {
       id: "cmd_pipeline",
-      title: "Run Full 22-Agent Response Pipeline",
+      title: "Run Full 30-Agent Response Pipeline",
       category: "Actions",
       icon: <Activity size={18} />,
       action: () => onRunPipeline(),
@@ -66,7 +66,7 @@ export const Navbar: React.FC<NavbarProps> = ({ wsConnected, onRunPipeline }) =>
     },
     {
       id: "cmd_agents",
-      title: "Manage Agent Fleet (22 Agents)",
+      title: "Manage Agent Fleet (30 Agents)",
       category: "Navigation",
       icon: <Users size={18} />,
       action: () => navigate("/agents"),

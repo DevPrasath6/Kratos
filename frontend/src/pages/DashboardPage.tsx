@@ -34,7 +34,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
   const [chatMessages, setChatMessages] = useState<Array<{ sender: "user" | "bot"; text: string; time: string }>>([
     {
       sender: "bot",
-      text: "KRATOS Nemotron Intelligence initialized.\n• Evacuation route rationale & bottlenecks\n• Bridge structural integrity & collapse risk\n• Emergency air-drop cargo allocations\n\nRun the 22-agent pipeline to generate grounded tactical analysis.",
+      text: "KRATOS Nemotron Intelligence initialized.\n• Evacuation route rationale & bottlenecks\n• Bridge structural integrity & collapse risk\n• Emergency air-drop cargo allocations\n\nRun the 30-agent pipeline to generate grounded tactical analysis.",
       time: "02:18 pm",
     },
   ]);
@@ -102,7 +102,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
 
   const handleLaunchAnalysis = async () => {
     setIsRunning(true);
-    toast.info("Initializing 22-Agent Pipeline", {
+    toast.info("Initializing 30-Agent Pipeline", {
       description: `Disaster: ${selectedHazard.toUpperCase()} | Severity: ${severityPct}%`,
     });
 
@@ -123,7 +123,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
       setSafePath(sPath.map(String));
       await fetchLiveGraph(graphId);
       toast.success("Resilience Pipeline Executed!", {
-        description: "All 22 agents finished processing. Map routes updated.",
+        description: "All 30 agents finished processing. Map routes updated.",
       });
     } catch (err: any) {
       toast.error("Pipeline Error", { description: err.message || "Failed to execute pipeline" });
@@ -169,7 +169,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
 
   return (
     <div style={{ padding: "20px 24px", minHeight: "calc(100vh - 64px)", backgroundColor: "#090C10" }}>
-      {/* 22-Stage Grouped Workflow Stepper */}
+      {/* 30-Agent Grouped Workflow Stepper */}
       <PipelineDiagram agentStatus={agentStatus} />
 
       {/* Main 3-Column Ops Room Grid */}
@@ -349,7 +349,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                 }}
               >
                 {isRunning ? <RefreshCw className="animate-spin" size={16} /> : <Play size={16} />}
-                <span>{isRunning ? "RUNNING 22 AGENTS..." : "EXECUTE RESPONSE PIPELINE"}</span>
+                <span>{isRunning ? "RUNNING 30 AGENTS..." : "EXECUTE RESPONSE PIPELINE"}</span>
               </button>
 
               {/* Toggle AI Tactical Panel Button */}

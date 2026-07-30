@@ -22,8 +22,10 @@ export const PipelineDiagram: React.FC<PipelineDiagramProps> = ({
       badge: "DATA LAYER",
       agents: [
         { id: "ingest", name: "Image Ingestion", agentName: "image_ingestion" },
-        { id: "vlm", name: "SegFormer VLM", agentName: "road_extraction" },
+        { id: "vlm", name: "Road Extraction", agentName: "road_extraction" },
         { id: "sat", name: "Satellite Tasking", agentName: "autonomous_satellite_tasking" },
+        { id: "dmg", name: "Damage Verify", agentName: "damage_verification" },
+        { id: "climate", name: "Micro Climate", agentName: "predictive_micro_climate" },
       ],
     },
     {
@@ -32,8 +34,9 @@ export const PipelineDiagram: React.FC<PipelineDiagramProps> = ({
       agents: [
         { id: "graph", name: "Road Graph NX", agentName: "road_graph" },
         { id: "infra", name: "Infra Collapse Risk", agentName: "infrastructure_risk" },
-        { id: "vlm_dmg", name: "Damage Verify", agentName: "damage_verification" },
-        { id: "climate", name: "Micro Climate", agentName: "predictive_micro_climate" },
+        { id: "struct", name: "Structural Eng.", agentName: "structural_engineering" },
+        { id: "traffic", name: "Traffic Congestion", agentName: "traffic_analysis" },
+        { id: "water", name: "Water Quality", agentName: "water_quality" },
       ],
     },
     {
@@ -41,8 +44,10 @@ export const PipelineDiagram: React.FC<PipelineDiagramProps> = ({
       badge: "DISASTER ENGINE",
       agents: [
         { id: "sim", name: "Hazard Simulation", agentName: "disaster_simulation" },
-        { id: "route", name: "cuOpt Evacuation", agentName: "route_planning" },
-        { id: "traffic", name: "Traffic Congestion", agentName: "traffic_analysis" },
+        { id: "route", name: "Route Planning", agentName: "route_planning" },
+        { id: "drone", name: "Drone 3D Swarm", agentName: "drone_swarm_orchestrator" },
+        { id: "mesh", name: "Telecom COW Mesh", agentName: "telecom_mesh" },
+        { id: "power", name: "Power Grid Rest.", agentName: "power_grid_restoration" },
       ],
     },
     {
@@ -50,13 +55,10 @@ export const PipelineDiagram: React.FC<PipelineDiagramProps> = ({
       badge: "OPS DISPATCH",
       agents: [
         { id: "res", name: "Resource Allocation", agentName: "resource_allocation" },
-        { id: "vol", name: "Medical Dispatch", agentName: "volunteer_healthcare_dispatch" },
+        { id: "triage", name: "Medical Triage", agentName: "medical_triage" },
         { id: "shelter", name: "Shelter Occupancy", agentName: "shelter_capacity" },
         { id: "supply", name: "Helicopter Cargo", agentName: "supply_logistics" },
-        { id: "evacuation", name: "Autonomous Transport", agentName: "evacuation_transport" },
-        { id: "power", name: "Micro-Grid Rerouting", agentName: "power_grid_restoration" },
-        { id: "drone", name: "Drone 3D Swarm", agentName: "drone_swarm_orchestrator" },
-        { id: "mesh", name: "Telecom COW Mesh", agentName: "telecom_mesh" },
+        { id: "evac", name: "Evacuation Trans.", agentName: "evacuation_transport" },
       ],
     },
     {
@@ -64,17 +66,21 @@ export const PipelineDiagram: React.FC<PipelineDiagramProps> = ({
       badge: "IPAWS & NLP",
       agents: [
         { id: "social", name: "Social Distress NER", agentName: "social_media_distress" },
+        { id: "vol", name: "Volunteer Dispatch", agentName: "volunteer_healthcare_dispatch" },
+        { id: "wild", name: "Wildlife Rescue", agentName: "wildlife_rescue" },
+        { id: "debris", name: "Debris Clearance", agentName: "debris_clearance" },
         { id: "rf", name: "RF IPAWS Alert", agentName: "radio_frequency_alert" },
-        { id: "notify", name: "SMS / Push Dispatch", agentName: "notification" },
       ],
     },
     {
       phaseName: "6. Report & Audit",
       badge: "GOVERNANCE",
       agents: [
+        { id: "notify", name: "Multi-Channel Notif", agentName: "notification" },
+        { id: "pr", name: "Public Relations", agentName: "public_relations" },
         { id: "pdf", name: "Nemotron PDF Report", agentName: "report_generation" },
         { id: "audit", name: "SQLite Audit Log", agentName: "audit" },
-        { id: "ping", name: "System Diagnostic", agentName: "ping" },
+        { id: "ping", name: "Ping Diagnostic", agentName: "ping" },
       ],
     },
   ];
@@ -106,12 +112,12 @@ export const PipelineDiagram: React.FC<PipelineDiagramProps> = ({
               margin: 0,
             }}
           >
-            22-AGENT WORKFLOW PIPELINE
+            30-AGENT WORKFLOW PIPELINE
           </h3>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "16px", fontSize: "0.75rem", fontFamily: "var(--mono-font)" }}>
           <span style={{ color: "#8B949E" }}>
-            ACTIVE: <strong style={{ color: "#38BDF8" }}>{activeCount} / 22</strong>
+            ACTIVE: <strong style={{ color: "#38BDF8" }}>{activeCount} / 30</strong>
           </span>
           <span style={{ color: "#10B981" }}>● COMPLETED</span>
           <span style={{ color: "#38BDF8" }}>● RUNNING</span>
