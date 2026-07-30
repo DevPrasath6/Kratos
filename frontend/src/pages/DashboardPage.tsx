@@ -43,6 +43,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
 
   const [liveNodes, setLiveNodes] = useState<Record<string, [number, number]>>({});
   const [liveEdges, setLiveEdges] = useState<Array<{ u: string; v: string; blocked?: boolean; type?: string }>>([]);
+  const [safePath, setSafePath] = useState<string[]>([]);
 
   const fetchLiveGraph = async (graphId: string = "sample_graph_default") => {
     try {
@@ -118,6 +119,8 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
         severity: Math.max(1, Math.floor(severityPct / 10))
       });
       const graphId = pipelineRes?.result?.graph_id || "sample_graph_default";
+      const sPath = pipelineRes?.result?.safe_path || [];
+      setSafePath(sPath.map(String));
       await fetchLiveGraph(graphId);
       toast.success("Resilience Pipeline Executed!", {
         description: "All 22 agents finished processing. Map routes updated.",
@@ -374,51 +377,76 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
               </div>
             )}
             <MapContainer center={[37.7621, -122.4066]} zoom={14} style={{ width: "100%", height: "100%", minHeight: "480px" }}>
-              <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" attribution="&copy; OpenStreetMap &copy; CARTO" />
+              {/* Only show the base map if no image is uploaded */}
+              {!imageUrl && (
+                <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" attribution="&copy; OpenStreetMap &copy; CARTO" />
+              )}
               
               {/* Display uploaded image directly on map */}
               {imageUrl && imageBounds && (
                 <ImageOverlay
                   url={imageUrl}
                   bounds={imageBounds}
-                  opacity={0.7}
+                  opacity={1.0}
                 />
               )}
 
               {/* Colorblind-Safe Polylines */}
-              {liveEdges.map((e, idx) => {
-                const p1 = liveNodes[e.u];
-                const p2 = liveNodes[e.v];
-                if (!p1 || !p2) return null;
-                const isBlocked = e.blocked || e.type === "blocked";
-                const isRoute = e.type === "route";
+              {liveEdges
+                .map((e, idx) => {
+                  const p1 = liveNodes[e.u];
+                  const p2 = liveNodes[e.v];
+                  if (!p1 || !p2) return null;
+                  const isBlocked = e.blocked || e.type === "blocked";
+                  
+                  let isRoute = false;
+                  for (let i = 0; i < safePath.length - 1; i++) {
+                    if ((safePath[i] === e.u && safePath[i+1] === e.v) ||
+                        (safePath[i] === e.v && safePath[i+1] === e.u)) {
+                      isRoute = true;
+                      break;
+                    }
+                  }
+                  
+                  return { e, idx, p1, p2, isBlocked, isRoute };
+                })
+                .filter(Boolean)
+                .sort((a, b) => (a!.isRoute === b!.isRoute ? 0 : a!.isRoute ? 1 : -1))
+                .map((item) => {
+                  const { idx, p1, p2, isBlocked, isRoute } = item!;
+                  return (
+                    <Polyline
+                      key={idx}
+                      positions={[p1, p2]}
+                      pathOptions={{
+                        color: isBlocked ? "#EF4444" : isRoute ? "#10B981" : "#334155",
+                        weight: isRoute ? 10 : isBlocked ? 3 : 2,
+                        dashArray: isBlocked ? "6, 6" : undefined,
+                        lineCap: "round",
+                        lineJoin: "round",
+                      }}
+                    />
+                  );
+                })}
+
+              {/* Spatial Nodes */}
+              {Object.entries(liveNodes).map(([id, coords]) => {
+                const isStart = safePath.length > 0 && id === safePath[0];
+                const isEnd = safePath.length > 0 && id === safePath[safePath.length - 1];
                 return (
-                  <Polyline
-                    key={idx}
-                    positions={[p1, p2]}
+                  <CircleMarker
+                    key={id}
+                    center={coords}
+                    radius={isStart || isEnd ? 8 : 5}
                     pathOptions={{
-                      color: isBlocked ? "#EF4444" : isRoute ? "#10B981" : "#334155",
-                      weight: isRoute ? 5 : isBlocked ? 3 : 2,
-                      dashArray: isBlocked ? "6, 6" : undefined,
+                      fillColor: isStart ? "#38BDF8" : isEnd ? "#10B981" : "#161B22",
+                      color: "#F0F6FC",
+                      weight: 1.5,
+                      fillOpacity: 0.9,
                     }}
                   />
                 );
               })}
-
-              {/* Spatial Nodes */}
-              {Object.entries(liveNodes).map(([id, coords]) => (
-                <CircleMarker
-                  key={id}
-                  center={coords}
-                  radius={id === "0" || id === "8" ? 8 : 5}
-                  pathOptions={{
-                    fillColor: id === "0" ? "#38BDF8" : id === "8" ? "#10B981" : "#161B22",
-                    color: "#F0F6FC",
-                    weight: 1.5,
-                    fillOpacity: 0.9,
-                  }}
-                />
-              ))}
             </MapContainer>
           </div>
         </Card>
