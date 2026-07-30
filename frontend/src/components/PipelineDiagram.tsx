@@ -53,6 +53,8 @@ export const PipelineDiagram: React.FC<PipelineDiagramProps> = ({
         { id: "vol", name: "Medical Dispatch", agentName: "volunteer_healthcare_dispatch" },
         { id: "shelter", name: "Shelter Occupancy", agentName: "shelter_capacity" },
         { id: "supply", name: "Helicopter Cargo", agentName: "supply_logistics" },
+        { id: "evacuation", name: "Autonomous Transport", agentName: "evacuation_transport" },
+        { id: "power", name: "Micro-Grid Rerouting", agentName: "power_grid_restoration" },
         { id: "drone", name: "Drone 3D Swarm", agentName: "drone_swarm_orchestrator" },
         { id: "mesh", name: "Telecom COW Mesh", agentName: "telecom_mesh" },
       ],

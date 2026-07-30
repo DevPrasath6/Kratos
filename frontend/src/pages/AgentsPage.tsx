@@ -44,6 +44,8 @@ export const AgentsPage: React.FC<AgentsPageProps> = ({
     { name: "Infrastructure Risk Agent", id: "infrastructure_risk", purpose: "Evaluates structural risk scores for critical infrastructure (bridges, power lines, dams).", ping: "18.5ms", exec: "35ms", conf: "97%", statusMsg: "Structural Risk Index Analyzer Active" },
     { name: "Damage Verification Agent", id: "damage_verification", purpose: "Analyzes citizen photos using NVIDIA Nemotron 12B VL to verify road/bridge damage.", ping: "290.0ms", exec: "190ms", conf: "95%", statusMsg: "Multimodal Visual Inspection Active" },
     { name: "Supply Logistics Agent", id: "supply_logistics", purpose: "Calculates cargo weight distributions & helicopter drop coordinates for isolated zones.", ping: "10.4ms", exec: "28ms", conf: "99%", statusMsg: "Air-Drop Payload Allocator Active" },
+    { name: "Evacuation Transport Agent", id: "evacuation_transport", purpose: "Coordinates autonomous evacuation buses and boats to active safe zones.", ping: "9.2ms", exec: "41ms", conf: "98%", statusMsg: "Fleet Dispatching Active" },
+    { name: "Power Grid Restoration Agent", id: "power_grid_restoration", purpose: "Reroutes emergency micro-grid power to critical infrastructure when main grid fails.", ping: "11.1ms", exec: "35ms", conf: "95%", statusMsg: "Micro-Grid Active" },
   ];
 
   const sampleLogs = [

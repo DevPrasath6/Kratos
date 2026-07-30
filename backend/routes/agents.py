@@ -27,6 +27,8 @@ from agents.shelter_capacity_agent import ShelterCapacityAgent
 from agents.infrastructure_risk_agent import InfrastructureRiskAgent
 from agents.damage_verification_agent import DamageVerificationAgent
 from agents.supply_logistics_agent import SupplyLogisticsAgent
+from agents.evacuation_transport_agent import EvacuationTransportAgent
+from agents.power_grid_restoration_agent import PowerGridRestorationAgent
 
 router = APIRouter(prefix="/api/agents", tags=["agents"])
 
@@ -53,6 +55,8 @@ orchestrator.register_agent(ShelterCapacityAgent())
 orchestrator.register_agent(InfrastructureRiskAgent())
 orchestrator.register_agent(DamageVerificationAgent())
 orchestrator.register_agent(SupplyLogisticsAgent())
+orchestrator.register_agent(EvacuationTransportAgent())
+orchestrator.register_agent(PowerGridRestorationAgent())
 
 
 @router.post("/upload")
@@ -222,6 +226,8 @@ async def run_full_pipeline(payload: Dict[str, Any] = None):
         "infrastructure_risk",
         "damage_verification",
         "supply_logistics",
+        "evacuation_transport",
+        "power_grid_restoration",
         "radio_alert",
         "notification",
         "report_generation",
@@ -397,6 +403,16 @@ async def damage_verification(payload: Dict[str, Any] = None):
 async def supply_logistics(payload: Dict[str, Any] = None):
     payload = payload or {}
     return {"status": "success", "result": await orchestrator.run_agent("supply_logistics", payload)}
+
+@router.post("/futuristic/evacuation_transport")
+async def evacuation_transport(payload: Dict[str, Any] = None):
+    payload = payload or {}
+    return {"status": "success", "result": await orchestrator.run_agent("evacuation_transport", payload)}
+
+@router.post("/futuristic/power_grid_restoration")
+async def power_grid_restoration(payload: Dict[str, Any] = None):
+    payload = payload or {}
+    return {"status": "success", "result": await orchestrator.run_agent("power_grid_restoration", payload)}
 
 @router.get("/nim/health")
 async def nim_health():

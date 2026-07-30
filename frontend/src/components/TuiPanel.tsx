@@ -39,6 +39,8 @@ const ALL_AGENTS = [
   "infrastructure_risk",
   "damage_verification",
   "supply_logistics",
+  "evacuation_transport",
+  "power_grid_restoration",
 ];
 
 export const TuiPanel: React.FC<TuiPanelProps> = ({ agentStatus, statuses }) => {
