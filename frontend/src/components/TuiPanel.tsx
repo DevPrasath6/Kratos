@@ -90,7 +90,7 @@ export const TuiPanel: React.FC<TuiPanelProps> = ({ agentStatus, statuses }) => 
               fontFamily: "var(--mono-font)",
             }}
           >
-            65 AGENTS DOCKED
+            30 AGENTS DOCKED
           </span>
         </div>
 
@@ -199,7 +199,7 @@ export const TuiPanel: React.FC<TuiPanelProps> = ({ agentStatus, statuses }) => 
           >
             <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
               <span style={{ color: "#8B949E" }}>
-                FLEET CAPACITY: <strong style={{ color: "#38BDF8" }}>65 AUTONOMOUS AGENTS</strong>
+                FLEET CAPACITY: <strong style={{ color: "#38BDF8" }}>30 AUTONOMOUS AGENTS</strong>
               </span>
               <span style={{ color: "#8B949E" }}>
                 WEBSOCKET STREAM: <strong style={{ color: "#10B981" }}>SYNCED</strong>

@@ -14,7 +14,7 @@
 │                           (http://localhost:5173)                                │
 │                                                                                  │
 │   ├── Dynamic Leaflet Map Container (Live Node Lat/Lng & Evacuation Polylines)   │
-│   ├── 65-Stage Interactive Pipeline Visualizer                                   │
+│   ├── 30-Stage Interactive Pipeline Visualizer                                   │
 │   ├── Monospace CLI TUI Panel & Telemetry Charts                                 │
 │   └── NVIDIA Nemotron LLM Disaster Response Chatbot                              │
 └──────────────────────────────────────┬───────────────────────────────────────────┘
@@ -23,7 +23,25 @@
 │                      FASTAPI AGENT ORCHESTRATION SERVER                          │
 │                           (http://localhost:8000)                                │
 │                                                                                  │
-│   ┌──────────────────────────────────────────────────────────────────────────┐   │\n│   │                 65 AUTONOMOUS DISASTER RESPONSE AGENTS                   │   │\n│   ├──────────────────────────────────────────────────────────────────────────┤   │\n│   │  1. Image Ingestion Agent           34. Food Supply Agent              │   │\n│   │  2. Road Extraction Agent           35. Water Purification Agent       │   │\n│   │  3. Road Graph NetworkX Agent       36. Mobile Clinic Agent            │   │\n│   │  4. Disaster Simulation Agent       37. Emergency Surgery Agent        │   │\n│   │  5. Dynamic Route Planning Agent    38. Blood Bank Agent               │   │\n│   │  6. Traffic Congestion Agent        39. Search Rescue Dogs Agent       │   │\n│   │  7. Resource Allocation Agent       40. Acoustic Detection Agent       │   │\n│   │  8. Volunteer Dispatch Agent        41. Thermal Imaging Agent          │   │\n│   │  9. RF Broadcast Alert Agent        42. Seismic Activity Agent         │   │\n│   │ 10. PDF Report Generation Agent     43. Tsunami Warning Agent          │   │\n│   │ 11. Multi-Channel Notification      44. Radiation Monitor Agent        │   │\n│   │ 12. Drone Swarm Orchestrator Agent  45. Biohazard Detection Agent      │   │\n│   │ 13. Predictive Micro-Climate Agent  46. Chemical Spill Agent           │   │\n│   │ 14. Social Media Distress NLP Agent 47. Air Quality Agent              │   │\n│   │ 15. Autonomous Satellite Tasking    48. Traffic Signal Override Agent  │   │\n│   │ 16. Telecom Mesh COW Agent          49. Bridge Inspection Agent        │   │\n│   │ 17. Relief Shelter Capacity Agent   50. Dam Integrity Agent            │   │\n│   │ 18. Infrastructure Collapse Risk    51. Helipad Logistics Agent        │   │\n│   │ 19. Multimodal Vision Damage Agent  52. Maritime Rescue Agent          │   │\n│   │ 20. Supply Helicopter Cargo Agent   53. Submarine Drone Agent          │   │\n│   │ 21. Audit & SQLite Logging Agent    54. Volunteer Coordination Agent   │   │\n│   │ 22. Standalone Ping Diagnostic      55. Donation Routing Agent         │   │\n│   │ 23. Evacuation Transport Agent      56. Crowd Psychology Agent         │   │\n│   │ 24. Power Grid Restoration Agent    57. Panic Mitigation Agent         │   │\n│   │ 25. Water Quality Agent             58. Language Translation Agent     │   │\n│   │ 26. Medical Triage Agent            59. Sign Language Agent            │   │\n│   │ 27. Debris Clearance Agent          60. Pet Rescue Agent               │   │\n│   │ 28. Wildlife Rescue Agent           61. Livestock Evacuation Agent     │   │\n│   │ 29. Structural Engineering Agent    62. Emergency Generator Agent      │   │\n│   │ 30. Public Relations Agent          63. Solar Microgrid Agent          │   │\n│   │ 31. Fire Propagation Agent          64. Satellite Internet Agent       │   │\n│   │ 32. Wind Trajectory Agent           65. Mesh Network Agent             │   │\n│   │ 33. Evacuation Center Agent                                            │   │\n│   └──────────────────────────────────────────────────────────────────────────┘   │
+│   ┌──────────────────────────────────────────────────────────────────────────┐   │
+│   │                 30 AUTONOMOUS DISASTER RESPONSE AGENTS                   │   │
+│   ├──────────────────────────────────────────────────────────────────────────┤   │
+│   │  1. Image Ingestion Agent           16. Telecom Mesh COW Agent           │   │
+│   │  2. Road Extraction Agent           17. Relief Shelter Capacity Agent    │   │
+│   │  3. Road Graph NetworkX Agent       18. Infrastructure Collapse Risk     │   │
+│   │  4. Disaster Simulation Agent       19. Multimodal Vision Damage Agent   │   │
+│   │  5. Dynamic Route Planning Agent    20. Supply Helicopter Cargo Agent    │   │
+│   │  6. Traffic Congestion Agent        21. Audit & SQLite Logging Agent     │   │
+│   │  7. Resource Allocation Agent       22. Standalone Ping Diagnostic       │   │
+│   │  8. Volunteer Dispatch Agent        23. Evacuation Transport Agent       │   │
+│   │  9. RF Broadcast Alert Agent        24. Power Grid Restoration Agent     │   │
+│   │ 10. PDF Report Generation Agent     25. Water Quality Agent              │   │
+│   │ 11. Multi-Channel Notification      26. Medical Triage Agent             │   │
+│   │ 12. Drone Swarm Orchestrator Agent  27. Debris Clearance Agent           │   │
+│   │ 13. Predictive Micro-Climate Agent  28. Wildlife Rescue Agent            │   │
+│   │ 14. Social Media Distress NLP Agent 29. Structural Engineering Agent     │   │
+│   │ 15. Autonomous Satellite Tasking    30. Public Relations Agent           │   │
+│   └──────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                  │
 │   ├── SQLite Event Audit Database                                                │
 │   └── NVIDIA NIM Integration (Nemotron 120B LLM & Nemotron 12B Vision VLM)       │
@@ -32,7 +50,7 @@
 
 ---
 
-## 🤖 Full 65-Agent Pipeline Breakdown
+## 🤖 Full 30-Agent Pipeline Breakdown
 
 | # | Agent Name | Key Purpose & Functionality | Underlying Tech / Models |
 |---|------------|-----------------------------|--------------------------|
@@ -112,7 +130,7 @@ python app.py
 
 ## 🧪 Testing
 
-Run the full automated test suite covering all 65 agents and end-to-end multi-agent pipelines:
+Run the full automated test suite covering all 30 agents and end-to-end multi-agent pipelines:
 
 ```bash
 cd backend
@@ -130,7 +148,7 @@ npm run build
 
 ## 📡 REST API Reference
 
-### 1. Execute Full 65-Agent Response Pipeline
+### 1. Execute Full 30-Agent Response Pipeline
 ```bash
 curl -X POST http://localhost:8000/api/agents/pipeline/run \
   -H "Content-Type: application/json" \
