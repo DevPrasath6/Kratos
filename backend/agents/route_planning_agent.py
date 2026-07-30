@@ -29,16 +29,73 @@ class RoutePlanningAgent(BaseAgent):
             raise ValueError(f"Graph '{graph_id}' has no nodes.")
 
         raw_source = input_data.get("source")
-        try:
-            source = int(raw_source) if raw_source is not None else nodes[0]
-        except (ValueError, TypeError):
-            source = nodes[0]
-
         raw_dest = input_data.get("destination")
-        try:
-            destination = int(raw_dest) if raw_dest is not None else (nodes[-1] if len(nodes) > 1 else nodes[0])
-        except (ValueError, TypeError):
-            destination = nodes[-1] if len(nodes) > 1 else nodes[0]
+        trapped_location = input_data.get("trapped_location")
+
+        source = None
+        destination = None
+
+        print(f"DEBUG route_planning_agent: trapped_location is {trapped_location}")
+        
+        if trapped_location and isinstance(trapped_location, list) and len(trapped_location) == 2:
+            import math
+            lat, lng = trapped_location
+            print(f"DEBUG route_planning_agent: Using lat={lat}, lng={lng}")
+            
+            import networkx as nx
+            try:
+                components = list(nx.connected_components(G))
+                valid_nodes = set()
+                for comp in components:
+                    if len(comp) > 1:
+                        valid_nodes.update(comp)
+            except Exception:
+                valid_nodes = set(G.nodes())
+                
+            if not valid_nodes:
+                valid_nodes = set(G.nodes())
+
+            # Find closest node (in a connected road network) to the trapped location
+            min_dist = float("inf")
+            for n in valid_nodes:
+                data = G.nodes[n]
+                g_pos = data.get("geo_pos")
+                if g_pos:
+                    dist = math.hypot(g_pos[0] - lat, g_pos[1] - lng)
+                    if dist < min_dist:
+                        min_dist = dist
+                        source = n
+            
+            # Find furthest reachable node from the source to act as safe zone destination
+            if source is not None:
+                import networkx as nx
+                try:
+                    reachable = nx.node_connected_component(G, source)
+                except Exception:
+                    reachable = G.nodes()
+
+                max_dist = -1
+                source_pos = G.nodes[source].get("geo_pos", [0,0])
+                for n in reachable:
+                    data = G.nodes[n]
+                    g_pos = data.get("geo_pos", [0,0])
+                    dist = math.hypot(g_pos[0] - source_pos[0], g_pos[1] - source_pos[1])
+                    if dist > max_dist:
+                        max_dist = dist
+                        destination = n
+
+        # Fallbacks if trapped_location logic didn't set them or wasn't provided
+        if source is None:
+            try:
+                source = int(raw_source) if raw_source is not None else nodes[0]
+            except (ValueError, TypeError):
+                source = nodes[0]
+
+        if destination is None:
+            try:
+                destination = int(raw_dest) if raw_dest is not None else (nodes[-1] if len(nodes) > 1 else nodes[0])
+            except (ValueError, TypeError):
+                destination = nodes[-1] if len(nodes) > 1 else nodes[0]
 
         if source not in G:
             source = nodes[0]
