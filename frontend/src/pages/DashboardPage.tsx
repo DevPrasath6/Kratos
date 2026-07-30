@@ -225,6 +225,54 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                     {fileInfo ? fileInfo.size : "Supports PNG / JPEG up to 50MB"}
                   </span>
                 </div>
+
+                {/* Jury Sample Images */}
+                <div style={{ marginTop: "12px" }}>
+                  <span style={{ fontSize: "0.65rem", fontWeight: 600, color: "#8B949E", display: "block", marginBottom: "6px", fontFamily: "var(--mono-font)" }}>
+                    JURY SAMPLE SELECTION
+                  </span>
+                  <div style={{ display: "flex", gap: "8px", overflowX: "auto", paddingBottom: "4px" }}>
+                    {["100034_sat.jpg", "100081_sat.jpg", "100129_sat.jpg", "100703_sat.jpg", "100712_sat.jpg"].map((filename) => (
+                      <div
+                        key={filename}
+                        onClick={async () => {
+                          try {
+                            const resp = await fetch(`/samples/${filename}`);
+                            const blob = await resp.blob();
+                            const file = new File([blob], filename, { type: blob.type });
+                            setSelectedFile(file);
+                            const url = URL.createObjectURL(file);
+                            setImageUrl(url);
+                            const img = new window.Image();
+                            img.onload = () => {
+                              const baseLat = 37.7749;
+                              const baseLng = -122.4194;
+                              const south = baseLat - (img.height / 10000.0);
+                              const east = baseLng + (img.width / 10000.0);
+                              setImageBounds([[south, baseLng], [baseLat, east]]);
+                            };
+                            img.src = url;
+                            setFileInfo({ name: filename, size: "0.05 MB" });
+                            toast.success("Sample Selected", { description: `${filename} ready for ingestion.` });
+                          } catch (err) {
+                            console.error(err);
+                          }
+                        }}
+                        style={{
+                          width: "48px",
+                          height: "48px",
+                          borderRadius: "4px",
+                          overflow: "hidden",
+                          border: "1px solid #30363D",
+                          cursor: "pointer",
+                          flexShrink: 0
+                        }}
+                      >
+                        <img src={`/samples/${filename}`} alt={filename} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
 
               {/* Hazard Presets */}
