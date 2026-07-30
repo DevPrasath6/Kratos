@@ -13,11 +13,10 @@ dist/
 build/
 .DS_Store
 
-# Datasets and large binary models
-data/dataset/images/*
-data/dataset/masks/*
-!data/dataset/.gitkeep
-models/*.pt
-models/*.pth
-models/*.bin
-!models/.gitkeep
+# Datasets and generated files
+backend/static/reports/*.pdf
+backend/data/dataset/*
+!backend/data/dataset/.gitkeep
+backend/models/*.pth
+backend/models/*.bin
+!backend/models/.gitkeep

@@ -28,7 +28,7 @@
 │   ├──────────────────────────────────────────────────────────────────────────┤   │
 │   │  1. Image Ingestion Agent           12. Drone Swarm Orchestrator Agent   │   │
 │   │  2. Road Extraction Agent           13. Predictive Micro-Climate Agent   │   │
-│   │  3. Road Graph NetworkX Agent        14. Social Media Distress NLP Agent  │   │
+│   │  3. Road Graph NetworkX Agent       14. Social Media Distress NLP Agent  │   │
 │   │  4. Disaster Simulation Agent       15. Autonomous Satellite Tasking     │   │
 │   │  5. Dynamic Route Planning Agent    16. Telecom Mesh COW Agent           │   │
 │   │  6. Traffic Congestion Agent        17. Relief Shelter Capacity Agent    │   │

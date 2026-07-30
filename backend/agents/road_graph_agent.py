@@ -21,9 +21,12 @@ class RoadGraphAgent(BaseAgent):
         use_sample = input_data.get("use_sample", False)
         segments = input_data.get("segments")
 
-        if use_sample or not segments:
+        if use_sample:
             graph, graph_id = self.sample_graph()
             return self.serialize_graph(graph, graph_id, input_data)
+
+        if not segments:
+            segments = []
 
         tolerance = float(input_data.get("tolerance", 15.0))
         graph, graph_id = self.build_graph_from_segments(segments, tolerance)
@@ -40,7 +43,12 @@ class RoadGraphAgent(BaseAgent):
                     return idx
             idx = len(node_coords)
             node_coords.append(pt)
-            G.add_node(idx, pos=list(pt))
+            
+            geo_base_lat, geo_base_lng = 37.7749, -122.4194
+            geo_lat = round(geo_base_lat - (pt[1] / 10000.0), 6)
+            geo_lng = round(geo_base_lng + (pt[0] / 10000.0), 6)
+            
+            G.add_node(idx, pos=list(pt), geo_pos=[geo_lat, geo_lng])
             return idx
 
         for seg in segments:
@@ -106,6 +114,7 @@ class RoadGraphAgent(BaseAgent):
             nodes_list.append({
                 "id": n,
                 "pos": data.get("pos", [0, 0]),
+                "geo_pos": data.get("geo_pos", [37.7749, -122.4194]),
             })
 
         edges_list = []
