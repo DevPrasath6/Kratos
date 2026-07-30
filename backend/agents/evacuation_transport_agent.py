@@ -10,7 +10,6 @@ class EvacuationTransportAgent(BaseAgent):
         Coordinates autonomous evacuation transports (buses, boats, high-clearance vehicles) 
         to active safe zones and designated pick-up points.
         """
-        await asyncio.sleep(0.01)  # Simulate logic
         
         safe_path = input_data.get("safe_path", [])
         disaster_type = input_data.get("disaster_type", "Flood").lower()
@@ -23,9 +22,20 @@ class EvacuationTransportAgent(BaseAgent):
         ]
 
         output = dict(input_data)
-        output["evacuation_transport"] = {
+        from agents.nim_client import generate_agent_json
+        
+        fallback = {
             "assigned_transports": assigned_transports,
             "total_capacity": 90,
             "rendezvous_node": safe_path[-1] if safe_path else None
         }
+        prompt = (
+            f"You are the evacuation_transport agent. Purpose: Coordinates autonomous evacuation transports (buses, boats, high-clearance vehicles)          to active safe zones and designated pick-up points.\n"
+            f"Given the following disaster context/input data: {input_data}\n"
+            f"Generate a realistic, real-time JSON response. Your JSON MUST match this exact schema/keys: {fallback}"
+        )
+        
+        result = await generate_agent_json(prompt, fallback)
+        
+        output["evacuation_transport"] = result
         return output

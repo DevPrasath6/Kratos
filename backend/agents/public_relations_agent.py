@@ -10,12 +10,22 @@ class PublicRelationsAgent(BaseAgent):
         Drafts automated public safety broadcasts and press releases 
         based on real-time incident data.
         """
-        await asyncio.sleep(0.01)  # Simulate logic
         
         output = dict(input_data)
-        output["public_relations"] = {
+        from agents.nim_client import generate_agent_json
+        
+        fallback = {
             "broadcasts_issued": 3,
             "media_briefings_prepared": 1,
             "sentiment_analysis": "Anxious but informed"
         }
+        prompt = (
+            f"You are the public_relations agent. Purpose: Drafts automated public safety broadcasts and press releases          based on real-time incident data.\n"
+            f"Given the following disaster context/input data: {input_data}\n"
+            f"Generate a realistic, real-time JSON response. Your JSON MUST match this exact schema/keys: {fallback}"
+        )
+        
+        result = await generate_agent_json(prompt, fallback)
+        
+        output["public_relations"] = result
         return output

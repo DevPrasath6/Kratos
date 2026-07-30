@@ -10,12 +10,22 @@ class WildlifeRescueAgent(BaseAgent):
         Tracks displaced local wildlife and coordinates with animal 
         control and rescue organizations.
         """
-        await asyncio.sleep(0.01)  # Simulate logic
         
         output = dict(input_data)
-        output["wildlife_rescue"] = {
+        from agents.nim_client import generate_agent_json
+        
+        fallback = {
             "displaced_animals_estimated": 150,
             "rescue_teams_deployed": 2,
             "safe_habitats_secured": 1
         }
+        prompt = (
+            f"You are the wildlife_rescue agent. Purpose: Tracks displaced local wildlife and coordinates with animal          control and rescue organizations.\n"
+            f"Given the following disaster context/input data: {input_data}\n"
+            f"Generate a realistic, real-time JSON response. Your JSON MUST match this exact schema/keys: {fallback}"
+        )
+        
+        result = await generate_agent_json(prompt, fallback)
+        
+        output["wildlife_rescue"] = result
         return output
