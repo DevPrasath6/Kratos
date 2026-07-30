@@ -114,7 +114,7 @@ export const AgentsPage: React.FC<AgentsPageProps> = ({
           <Shield size={20} color="#38BDF8" />
           <div>
             <h2 style={{ fontSize: "0.95rem", fontWeight: 700, color: "#F0F6FC", fontFamily: "var(--mono-font)", margin: 0 }}>
-              KRATOS 30-AGENT AUTONOMOUS FLEET
+              KRATOS 65-AGENT AUTONOMOUS FLEET
             </h2>
             <p style={{ fontSize: "0.72rem", color: "#8B949E", marginTop: "2px", fontFamily: "var(--mono-font)" }}>
               Real-time inference, latency, and confidence metrics managed by Agent Spectator
@@ -124,7 +124,7 @@ export const AgentsPage: React.FC<AgentsPageProps> = ({
 
         <div style={{ display: "flex", gap: "10px" }}>
           <span style={{ fontSize: "0.72rem", padding: "4px 10px", borderRadius: "6px", backgroundColor: "rgba(16, 185, 129, 0.15)", color: "#10B981", border: "1px solid #10B981", fontFamily: "var(--mono-font)" }}>
-            30 / 30 ONLINE
+            65 / 65 ONLINE
           </span>
           <span style={{ fontSize: "0.72rem", padding: "4px 10px", borderRadius: "6px", backgroundColor: "rgba(56, 189, 248, 0.15)", color: "#38BDF8", border: "1px solid #38BDF8", fontFamily: "var(--mono-font)" }}>
             ⚡ 136ms AVG PING

@@ -34,7 +34,7 @@ from agents.medical_triage_agent import MedicalTriageAgent
 from agents.debris_clearance_agent import DebrisClearanceAgent
 from agents.wildlife_rescue_agent import WildlifeRescueAgent
 from agents.structural_engineering_agent import StructuralEngineeringAgent
-from agents.public_relations_agent import PublicRelationsAgent
+from agents.public_relations_agent import PublicRelationsAgent\nfrom agents.fire_propagation_agent import FirePropagationAgent\nfrom agents.wind_trajectory_agent import WindTrajectoryAgent\nfrom agents.evacuation_center_agent import EvacuationCenterAgent\nfrom agents.food_supply_agent import FoodSupplyAgent\nfrom agents.water_purification_agent import WaterPurificationAgent\nfrom agents.mobile_clinic_agent import MobileClinicAgent\nfrom agents.emergency_surgery_agent import EmergencySurgeryAgent\nfrom agents.blood_bank_agent import BloodBankAgent\nfrom agents.search_rescue_dogs_agent import SearchRescueDogsAgent\nfrom agents.acoustic_detection_agent import AcousticDetectionAgent\nfrom agents.thermal_imaging_agent import ThermalImagingAgent\nfrom agents.seismic_activity_agent import SeismicActivityAgent\nfrom agents.tsunami_warning_agent import TsunamiWarningAgent\nfrom agents.radiation_monitor_agent import RadiationMonitorAgent\nfrom agents.biohazard_detection_agent import BiohazardDetectionAgent\nfrom agents.chemical_spill_agent import ChemicalSpillAgent\nfrom agents.air_quality_agent import AirQualityAgent\nfrom agents.traffic_signal_override_agent import TrafficSignalOverrideAgent\nfrom agents.bridge_inspection_agent import BridgeInspectionAgent\nfrom agents.dam_integrity_agent import DamIntegrityAgent\nfrom agents.helipad_logistics_agent import HelipadLogisticsAgent\nfrom agents.maritime_rescue_agent import MaritimeRescueAgent\nfrom agents.submarine_drone_agent import SubmarineDroneAgent\nfrom agents.volunteer_coordination_agent import VolunteerCoordinationAgent\nfrom agents.donation_routing_agent import DonationRoutingAgent\nfrom agents.crowd_psychology_agent import CrowdPsychologyAgent\nfrom agents.panic_mitigation_agent import PanicMitigationAgent\nfrom agents.language_translation_agent import LanguageTranslationAgent\nfrom agents.sign_language_agent import SignLanguageAgent\nfrom agents.pet_rescue_agent import PetRescueAgent\nfrom agents.livestock_evacuation_agent import LivestockEvacuationAgent\nfrom agents.emergency_generator_agent import EmergencyGeneratorAgent\nfrom agents.solar_microgrid_agent import SolarMicrogridAgent\nfrom agents.satellite_internet_agent import SatelliteInternetAgent\nfrom agents.mesh_network_agent import MeshNetworkAgent
 
 router = APIRouter(prefix="/api/agents", tags=["agents"])
 
@@ -68,7 +68,7 @@ orchestrator.register_agent(MedicalTriageAgent())
 orchestrator.register_agent(DebrisClearanceAgent())
 orchestrator.register_agent(WildlifeRescueAgent())
 orchestrator.register_agent(StructuralEngineeringAgent())
-orchestrator.register_agent(PublicRelationsAgent())
+orchestrator.register_agent(PublicRelationsAgent())\norchestrator.register_agent(FirePropagationAgent())\norchestrator.register_agent(WindTrajectoryAgent())\norchestrator.register_agent(EvacuationCenterAgent())\norchestrator.register_agent(FoodSupplyAgent())\norchestrator.register_agent(WaterPurificationAgent())\norchestrator.register_agent(MobileClinicAgent())\norchestrator.register_agent(EmergencySurgeryAgent())\norchestrator.register_agent(BloodBankAgent())\norchestrator.register_agent(SearchRescueDogsAgent())\norchestrator.register_agent(AcousticDetectionAgent())\norchestrator.register_agent(ThermalImagingAgent())\norchestrator.register_agent(SeismicActivityAgent())\norchestrator.register_agent(TsunamiWarningAgent())\norchestrator.register_agent(RadiationMonitorAgent())\norchestrator.register_agent(BiohazardDetectionAgent())\norchestrator.register_agent(ChemicalSpillAgent())\norchestrator.register_agent(AirQualityAgent())\norchestrator.register_agent(TrafficSignalOverrideAgent())\norchestrator.register_agent(BridgeInspectionAgent())\norchestrator.register_agent(DamIntegrityAgent())\norchestrator.register_agent(HelipadLogisticsAgent())\norchestrator.register_agent(MaritimeRescueAgent())\norchestrator.register_agent(SubmarineDroneAgent())\norchestrator.register_agent(VolunteerCoordinationAgent())\norchestrator.register_agent(DonationRoutingAgent())\norchestrator.register_agent(CrowdPsychologyAgent())\norchestrator.register_agent(PanicMitigationAgent())\norchestrator.register_agent(LanguageTranslationAgent())\norchestrator.register_agent(SignLanguageAgent())\norchestrator.register_agent(PetRescueAgent())\norchestrator.register_agent(LivestockEvacuationAgent())\norchestrator.register_agent(EmergencyGeneratorAgent())\norchestrator.register_agent(SolarMicrogridAgent())\norchestrator.register_agent(SatelliteInternetAgent())\norchestrator.register_agent(MeshNetworkAgent())
 
 
 @router.post("/upload")
@@ -473,3 +473,109 @@ async def nim_health():
             "vision": "nvidia/nemotron-nano-12b-v2-vl"
         }
     }
+\n
+@router.post("/fire_propagation/run")
+async def run_fire_propagation(payload: Dict[str, Any]):
+    return await orchestrator.execute_agent_standalone("fire_propagation", payload)\n
+@router.post("/wind_trajectory/run")
+async def run_wind_trajectory(payload: Dict[str, Any]):
+    return await orchestrator.execute_agent_standalone("wind_trajectory", payload)\n
+@router.post("/evacuation_center/run")
+async def run_evacuation_center(payload: Dict[str, Any]):
+    return await orchestrator.execute_agent_standalone("evacuation_center", payload)\n
+@router.post("/food_supply/run")
+async def run_food_supply(payload: Dict[str, Any]):
+    return await orchestrator.execute_agent_standalone("food_supply", payload)\n
+@router.post("/water_purification/run")
+async def run_water_purification(payload: Dict[str, Any]):
+    return await orchestrator.execute_agent_standalone("water_purification", payload)\n
+@router.post("/mobile_clinic/run")
+async def run_mobile_clinic(payload: Dict[str, Any]):
+    return await orchestrator.execute_agent_standalone("mobile_clinic", payload)\n
+@router.post("/emergency_surgery/run")
+async def run_emergency_surgery(payload: Dict[str, Any]):
+    return await orchestrator.execute_agent_standalone("emergency_surgery", payload)\n
+@router.post("/blood_bank/run")
+async def run_blood_bank(payload: Dict[str, Any]):
+    return await orchestrator.execute_agent_standalone("blood_bank", payload)\n
+@router.post("/search_rescue_dogs/run")
+async def run_search_rescue_dogs(payload: Dict[str, Any]):
+    return await orchestrator.execute_agent_standalone("search_rescue_dogs", payload)\n
+@router.post("/acoustic_detection/run")
+async def run_acoustic_detection(payload: Dict[str, Any]):
+    return await orchestrator.execute_agent_standalone("acoustic_detection", payload)\n
+@router.post("/thermal_imaging/run")
+async def run_thermal_imaging(payload: Dict[str, Any]):
+    return await orchestrator.execute_agent_standalone("thermal_imaging", payload)\n
+@router.post("/seismic_activity/run")
+async def run_seismic_activity(payload: Dict[str, Any]):
+    return await orchestrator.execute_agent_standalone("seismic_activity", payload)\n
+@router.post("/tsunami_warning/run")
+async def run_tsunami_warning(payload: Dict[str, Any]):
+    return await orchestrator.execute_agent_standalone("tsunami_warning", payload)\n
+@router.post("/radiation_monitor/run")
+async def run_radiation_monitor(payload: Dict[str, Any]):
+    return await orchestrator.execute_agent_standalone("radiation_monitor", payload)\n
+@router.post("/biohazard_detection/run")
+async def run_biohazard_detection(payload: Dict[str, Any]):
+    return await orchestrator.execute_agent_standalone("biohazard_detection", payload)\n
+@router.post("/chemical_spill/run")
+async def run_chemical_spill(payload: Dict[str, Any]):
+    return await orchestrator.execute_agent_standalone("chemical_spill", payload)\n
+@router.post("/air_quality/run")
+async def run_air_quality(payload: Dict[str, Any]):
+    return await orchestrator.execute_agent_standalone("air_quality", payload)\n
+@router.post("/traffic_signal_override/run")
+async def run_traffic_signal_override(payload: Dict[str, Any]):
+    return await orchestrator.execute_agent_standalone("traffic_signal_override", payload)\n
+@router.post("/bridge_inspection/run")
+async def run_bridge_inspection(payload: Dict[str, Any]):
+    return await orchestrator.execute_agent_standalone("bridge_inspection", payload)\n
+@router.post("/dam_integrity/run")
+async def run_dam_integrity(payload: Dict[str, Any]):
+    return await orchestrator.execute_agent_standalone("dam_integrity", payload)\n
+@router.post("/helipad_logistics/run")
+async def run_helipad_logistics(payload: Dict[str, Any]):
+    return await orchestrator.execute_agent_standalone("helipad_logistics", payload)\n
+@router.post("/maritime_rescue/run")
+async def run_maritime_rescue(payload: Dict[str, Any]):
+    return await orchestrator.execute_agent_standalone("maritime_rescue", payload)\n
+@router.post("/submarine_drone/run")
+async def run_submarine_drone(payload: Dict[str, Any]):
+    return await orchestrator.execute_agent_standalone("submarine_drone", payload)\n
+@router.post("/volunteer_coordination/run")
+async def run_volunteer_coordination(payload: Dict[str, Any]):
+    return await orchestrator.execute_agent_standalone("volunteer_coordination", payload)\n
+@router.post("/donation_routing/run")
+async def run_donation_routing(payload: Dict[str, Any]):
+    return await orchestrator.execute_agent_standalone("donation_routing", payload)\n
+@router.post("/crowd_psychology/run")
+async def run_crowd_psychology(payload: Dict[str, Any]):
+    return await orchestrator.execute_agent_standalone("crowd_psychology", payload)\n
+@router.post("/panic_mitigation/run")
+async def run_panic_mitigation(payload: Dict[str, Any]):
+    return await orchestrator.execute_agent_standalone("panic_mitigation", payload)\n
+@router.post("/language_translation/run")
+async def run_language_translation(payload: Dict[str, Any]):
+    return await orchestrator.execute_agent_standalone("language_translation", payload)\n
+@router.post("/sign_language/run")
+async def run_sign_language(payload: Dict[str, Any]):
+    return await orchestrator.execute_agent_standalone("sign_language", payload)\n
+@router.post("/pet_rescue/run")
+async def run_pet_rescue(payload: Dict[str, Any]):
+    return await orchestrator.execute_agent_standalone("pet_rescue", payload)\n
+@router.post("/livestock_evacuation/run")
+async def run_livestock_evacuation(payload: Dict[str, Any]):
+    return await orchestrator.execute_agent_standalone("livestock_evacuation", payload)\n
+@router.post("/emergency_generator/run")
+async def run_emergency_generator(payload: Dict[str, Any]):
+    return await orchestrator.execute_agent_standalone("emergency_generator", payload)\n
+@router.post("/solar_microgrid/run")
+async def run_solar_microgrid(payload: Dict[str, Any]):
+    return await orchestrator.execute_agent_standalone("solar_microgrid", payload)\n
+@router.post("/satellite_internet/run")
+async def run_satellite_internet(payload: Dict[str, Any]):
+    return await orchestrator.execute_agent_standalone("satellite_internet", payload)\n
+@router.post("/mesh_network/run")
+async def run_mesh_network(payload: Dict[str, Any]):
+    return await orchestrator.execute_agent_standalone("mesh_network", payload)\n
