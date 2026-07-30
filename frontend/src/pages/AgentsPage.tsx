@@ -46,6 +46,12 @@ export const AgentsPage: React.FC<AgentsPageProps> = ({
     { name: "Supply Logistics Agent", id: "supply_logistics", purpose: "Calculates cargo weight distributions & helicopter drop coordinates for isolated zones.", ping: "10.4ms", exec: "28ms", conf: "99%", statusMsg: "Air-Drop Payload Allocator Active" },
     { name: "Evacuation Transport Agent", id: "evacuation_transport", purpose: "Coordinates autonomous evacuation buses and boats to active safe zones.", ping: "9.2ms", exec: "41ms", conf: "98%", statusMsg: "Fleet Dispatching Active" },
     { name: "Power Grid Restoration Agent", id: "power_grid_restoration", purpose: "Reroutes emergency micro-grid power to critical infrastructure when main grid fails.", ping: "11.1ms", exec: "35ms", conf: "95%", statusMsg: "Micro-Grid Active" },
+    { name: "Water Quality Agent", id: "water_quality", purpose: "Analyzes contamination levels in floodwaters based on multispectral data.", ping: "12.4ms", exec: "28ms", conf: "97%", statusMsg: "Water Quality Monitor Active" },
+    { name: "Medical Triage Agent", id: "medical_triage", purpose: "Prioritizes casualties and medical emergencies based on severity reports.", ping: "8.2ms", exec: "40ms", conf: "96%", statusMsg: "Triage Coordination Active" },
+    { name: "Debris Clearance Agent", id: "debris_clearance", purpose: "Identifies large debris blockages and dispatches heavy clearing machinery.", ping: "9.5ms", exec: "22ms", conf: "98%", statusMsg: "Debris Dispatch Active" },
+    { name: "Wildlife Rescue Agent", id: "wildlife_rescue", purpose: "Tracks displaced wildlife and coordinates with rescue organizations.", ping: "15.0ms", exec: "31ms", conf: "94%", statusMsg: "Wildlife Tracking Active" },
+    { name: "Structural Engineering Agent", id: "structural_engineering", purpose: "Evaluates the structural integrity of bridges and high-rises post-disaster.", ping: "18.3ms", exec: "48ms", conf: "95%", statusMsg: "Structural Assessment Active" },
+    { name: "Public Relations Agent", id: "public_relations", purpose: "Drafts automated public safety broadcasts based on incident data.", ping: "5.5ms", exec: "120ms", conf: "99%", statusMsg: "Broadcast Generator Active" },
   ];
 
   const sampleLogs = [
@@ -108,7 +114,7 @@ export const AgentsPage: React.FC<AgentsPageProps> = ({
           <Shield size={20} color="#38BDF8" />
           <div>
             <h2 style={{ fontSize: "0.95rem", fontWeight: 700, color: "#F0F6FC", fontFamily: "var(--mono-font)", margin: 0 }}>
-              KRATOS 22-AGENT AUTONOMOUS FLEET
+              KRATOS 30-AGENT AUTONOMOUS FLEET
             </h2>
             <p style={{ fontSize: "0.72rem", color: "#8B949E", marginTop: "2px", fontFamily: "var(--mono-font)" }}>
               Real-time inference, latency, and confidence metrics managed by Agent Spectator
@@ -118,7 +124,7 @@ export const AgentsPage: React.FC<AgentsPageProps> = ({
 
         <div style={{ display: "flex", gap: "10px" }}>
           <span style={{ fontSize: "0.72rem", padding: "4px 10px", borderRadius: "6px", backgroundColor: "rgba(16, 185, 129, 0.15)", color: "#10B981", border: "1px solid #10B981", fontFamily: "var(--mono-font)" }}>
-            22 / 22 ONLINE
+            30 / 30 ONLINE
           </span>
           <span style={{ fontSize: "0.72rem", padding: "4px 10px", borderRadius: "6px", backgroundColor: "rgba(56, 189, 248, 0.15)", color: "#38BDF8", border: "1px solid #38BDF8", fontFamily: "var(--mono-font)" }}>
             ⚡ 136ms AVG PING

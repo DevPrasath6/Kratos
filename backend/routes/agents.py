@@ -29,6 +29,12 @@ from agents.damage_verification_agent import DamageVerificationAgent
 from agents.supply_logistics_agent import SupplyLogisticsAgent
 from agents.evacuation_transport_agent import EvacuationTransportAgent
 from agents.power_grid_restoration_agent import PowerGridRestorationAgent
+from agents.water_quality_agent import WaterQualityAgent
+from agents.medical_triage_agent import MedicalTriageAgent
+from agents.debris_clearance_agent import DebrisClearanceAgent
+from agents.wildlife_rescue_agent import WildlifeRescueAgent
+from agents.structural_engineering_agent import StructuralEngineeringAgent
+from agents.public_relations_agent import PublicRelationsAgent
 
 router = APIRouter(prefix="/api/agents", tags=["agents"])
 
@@ -57,6 +63,12 @@ orchestrator.register_agent(DamageVerificationAgent())
 orchestrator.register_agent(SupplyLogisticsAgent())
 orchestrator.register_agent(EvacuationTransportAgent())
 orchestrator.register_agent(PowerGridRestorationAgent())
+orchestrator.register_agent(WaterQualityAgent())
+orchestrator.register_agent(MedicalTriageAgent())
+orchestrator.register_agent(DebrisClearanceAgent())
+orchestrator.register_agent(WildlifeRescueAgent())
+orchestrator.register_agent(StructuralEngineeringAgent())
+orchestrator.register_agent(PublicRelationsAgent())
 
 
 @router.post("/upload")
@@ -228,6 +240,12 @@ async def run_full_pipeline(payload: Dict[str, Any] = None):
         "supply_logistics",
         "evacuation_transport",
         "power_grid_restoration",
+        "water_quality",
+        "medical_triage",
+        "debris_clearance",
+        "wildlife_rescue",
+        "structural_engineering",
+        "public_relations",
         "radio_alert",
         "notification",
         "report_generation",
@@ -413,6 +431,36 @@ async def evacuation_transport(payload: Dict[str, Any] = None):
 async def power_grid_restoration(payload: Dict[str, Any] = None):
     payload = payload or {}
     return {"status": "success", "result": await orchestrator.run_agent("power_grid_restoration", payload)}
+
+@router.post("/futuristic/water_quality")
+async def water_quality(payload: Dict[str, Any] = None):
+    payload = payload or {}
+    return {"status": "success", "result": await orchestrator.run_agent("water_quality", payload)}
+
+@router.post("/futuristic/medical_triage")
+async def medical_triage(payload: Dict[str, Any] = None):
+    payload = payload or {}
+    return {"status": "success", "result": await orchestrator.run_agent("medical_triage", payload)}
+
+@router.post("/futuristic/debris_clearance")
+async def debris_clearance(payload: Dict[str, Any] = None):
+    payload = payload or {}
+    return {"status": "success", "result": await orchestrator.run_agent("debris_clearance", payload)}
+
+@router.post("/futuristic/wildlife_rescue")
+async def wildlife_rescue(payload: Dict[str, Any] = None):
+    payload = payload or {}
+    return {"status": "success", "result": await orchestrator.run_agent("wildlife_rescue", payload)}
+
+@router.post("/futuristic/structural_engineering")
+async def structural_engineering(payload: Dict[str, Any] = None):
+    payload = payload or {}
+    return {"status": "success", "result": await orchestrator.run_agent("structural_engineering", payload)}
+
+@router.post("/futuristic/public_relations")
+async def public_relations(payload: Dict[str, Any] = None):
+    payload = payload or {}
+    return {"status": "success", "result": await orchestrator.run_agent("public_relations", payload)}
 
 @router.get("/nim/health")
 async def nim_health():

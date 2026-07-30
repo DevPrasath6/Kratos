@@ -14,7 +14,7 @@
 │                           (http://localhost:5173)                                │
 │                                                                                  │
 │   ├── Dynamic Leaflet Map Container (Live Node Lat/Lng & Evacuation Polylines)   │
-│   ├── 22-Stage Interactive Pipeline Visualizer                                   │
+│   ├── 30-Stage Interactive Pipeline Visualizer                                   │
 │   ├── Monospace CLI TUI Panel & Telemetry Charts                                 │
 │   └── NVIDIA Nemotron LLM Disaster Response Chatbot                              │
 └──────────────────────────────────────┬───────────────────────────────────────────┘
@@ -24,19 +24,23 @@
 │                           (http://localhost:8000)                                │
 │                                                                                  │
 │   ┌──────────────────────────────────────────────────────────────────────────┐   │
-│   │                 22 AUTONOMOUS DISASTER RESPONSE AGENTS                   │   │
+│   │                 30 AUTONOMOUS DISASTER RESPONSE AGENTS                   │   │
 │   ├──────────────────────────────────────────────────────────────────────────┤   │
-│   │  1. Image Ingestion Agent           12. Drone Swarm Orchestrator Agent   │   │
-│   │  2. Road Extraction Agent           13. Predictive Micro-Climate Agent   │   │
-│   │  3. Road Graph NetworkX Agent       14. Social Media Distress NLP Agent  │   │
-│   │  4. Disaster Simulation Agent       15. Autonomous Satellite Tasking     │   │
-│   │  5. Dynamic Route Planning Agent    16. Telecom Mesh COW Agent           │   │
-│   │  6. Traffic Congestion Agent        17. Relief Shelter Capacity Agent    │   │
-│   │  7. Resource Allocation Agent       18. Infrastructure Collapse Risk     │   │
-│   │  8. Volunteer Dispatch Agent        19. Multimodal Vision Damage Agent   │   │
-│   │  9. RF Broadcast Alert Agent        20. Supply Helicopter Cargo Agent    │   │
-│   │ 10. PDF Report Generation Agent     21. Audit & SQLite Logging Agent     │   │
-│   │ 11. Multi-Channel Notification      22. Standalone Ping Diagnostic       │   │
+│   │  1. Image Ingestion Agent           16. Telecom Mesh COW Agent           │   │
+│   │  2. Road Extraction Agent           17. Relief Shelter Capacity Agent    │   │
+│   │  3. Road Graph NetworkX Agent       18. Infrastructure Collapse Risk     │   │
+│   │  4. Disaster Simulation Agent       19. Multimodal Vision Damage Agent   │   │
+│   │  5. Dynamic Route Planning Agent    20. Supply Helicopter Cargo Agent    │   │
+│   │  6. Traffic Congestion Agent        21. Audit & SQLite Logging Agent     │   │
+│   │  7. Resource Allocation Agent       22. Standalone Ping Diagnostic       │   │
+│   │  8. Volunteer Dispatch Agent        23. Evacuation Transport Agent       │   │
+│   │  9. RF Broadcast Alert Agent        24. Power Grid Restoration Agent     │   │
+│   │ 10. PDF Report Generation Agent     25. Water Quality Agent              │   │
+│   │ 11. Multi-Channel Notification      26. Medical Triage Agent             │   │
+│   │ 12. Drone Swarm Orchestrator Agent  27. Debris Clearance Agent           │   │
+│   │ 13. Predictive Micro-Climate Agent  28. Wildlife Rescue Agent            │   │
+│   │ 14. Social Media Distress NLP Agent 29. Structural Engineering Agent     │   │
+│   │ 15. Autonomous Satellite Tasking    30. Public Relations Agent           │   │
 │   └──────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                  │
 │   ├── SQLite Event Audit Database                                                │
@@ -46,7 +50,7 @@
 
 ---
 
-## 🤖 Full 22-Agent Pipeline Breakdown
+## 🤖 Full 30-Agent Pipeline Breakdown
 
 | # | Agent Name | Key Purpose & Functionality | Underlying Tech / Models |
 |---|------------|-----------------------------|--------------------------|
@@ -72,6 +76,14 @@
 | **20** | **Supply Logistics** | Calculates helicopter cargo weight and air-drop coordinates. | Payload Allocation |
 | **21** | **Audit Logging** | Persists all agent execution events into an SQLite audit store. | SQLite3 / JSON Store |
 | **22** | **Ping Diagnostic** | Health check agent verifying agent network availability. | System Diagnostic |
+| **23** | **Evacuation Transport** | Coordinates autonomous evacuation buses and boats to active safe zones. | Fleet Dispatching |
+| **24** | **Power Grid Restoration** | Reroutes emergency micro-grid power to critical infrastructure when main grid fails. | Micro-Grid Routing |
+| **25** | **Water Quality** | Analyzes contamination levels in floodwaters based on multispectral data. | Multispectral Analysis |
+| **26** | **Medical Triage** | Prioritizes casualties and medical emergencies based on severity reports. | Triage Heuristics |
+| **27** | **Debris Clearance** | Identifies large debris blockages and dispatches heavy clearing machinery. | Asset Dispatch |
+| **28** | **Wildlife Rescue** | Tracks displaced wildlife and coordinates with rescue organizations. | Spatial Tracking |
+| **29** | **Structural Engineering** | Evaluates the structural integrity of bridges and high-rises post-disaster. | Structural Physics Engine |
+| **30** | **Public Relations** | Drafts automated public safety broadcasts based on incident data. | Nemotron LLM |
 
 ---
 
@@ -118,7 +130,7 @@ python app.py
 
 ## 🧪 Testing
 
-Run the full automated test suite covering all 22 agents and end-to-end multi-agent pipelines:
+Run the full automated test suite covering all 30 agents and end-to-end multi-agent pipelines:
 
 ```bash
 cd backend
@@ -136,7 +148,7 @@ npm run build
 
 ## 📡 REST API Reference
 
-### 1. Execute Full 22-Agent Response Pipeline
+### 1. Execute Full 30-Agent Response Pipeline
 ```bash
 curl -X POST http://localhost:8000/api/agents/pipeline/run \
   -H "Content-Type: application/json" \

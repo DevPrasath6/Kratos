@@ -41,6 +41,12 @@ const ALL_AGENTS = [
   "supply_logistics",
   "evacuation_transport",
   "power_grid_restoration",
+  "water_quality",
+  "medical_triage",
+  "debris_clearance",
+  "wildlife_rescue",
+  "structural_engineering",
+  "public_relations",
 ];
 
 export const TuiPanel: React.FC<TuiPanelProps> = ({ agentStatus, statuses }) => {
@@ -84,7 +90,7 @@ export const TuiPanel: React.FC<TuiPanelProps> = ({ agentStatus, statuses }) => 
               fontFamily: "var(--mono-font)",
             }}
           >
-            22 AGENTS DOCKED
+            30 AGENTS DOCKED
           </span>
         </div>
 
@@ -193,7 +199,7 @@ export const TuiPanel: React.FC<TuiPanelProps> = ({ agentStatus, statuses }) => 
           >
             <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
               <span style={{ color: "#8B949E" }}>
-                FLEET CAPACITY: <strong style={{ color: "#38BDF8" }}>22 AUTONOMOUS AGENTS</strong>
+                FLEET CAPACITY: <strong style={{ color: "#38BDF8" }}>30 AUTONOMOUS AGENTS</strong>
               </span>
               <span style={{ color: "#8B949E" }}>
                 WEBSOCKET STREAM: <strong style={{ color: "#10B981" }}>SYNCED</strong>

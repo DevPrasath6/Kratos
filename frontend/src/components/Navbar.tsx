@@ -18,7 +18,7 @@ export const Navbar: React.FC<NavbarProps> = ({ wsConnected, onRunPipeline }) =>
 
   const navTabs = [
     { id: "/dashboard", label: "COMMAND CENTER", icon: <LayoutDashboard size={15} /> },
-    { id: "/agents", label: "AGENT FLEET", icon: <Users size={15} />, badge: "22" },
+    { id: "/agents", label: "AGENT FLEET", icon: <Users size={15} />, badge: "30" },
     { id: "/telemetry", label: "TELEMETRY", icon: <Activity size={15} /> },
     { id: "/reports", label: "REPORTS", icon: <FileText size={15} /> },
     { id: "/nemotron", label: "NEMOTRON AI", icon: <Cpu size={15} /> },
