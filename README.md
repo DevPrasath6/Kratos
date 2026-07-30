@@ -85,8 +85,8 @@
 Create a `.env` file in the `backend/` directory:
 
 ```ini
-NIM_API_KEY=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
-NIM_VL_API_KEY=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
+NIM_API_KEY=******************************************
+NIM_VL_API_KEY=**********************************************
 ```
 
 ### 2. Launch Backend API Server
