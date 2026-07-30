@@ -28,7 +28,7 @@
 │   ├──────────────────────────────────────────────────────────────────────────┤   │
 │   │  1. Image Ingestion Agent           12. Drone Swarm Orchestrator Agent   │   │
 │   │  2. Road Extraction Agent           13. Predictive Micro-Climate Agent   │   │
-│   │  3. Road Graph NetworkX Agent        14. Social Media Distress NLP Agent  │   │
+│   │  3. Road Graph NetworkX Agent       14. Social Media Distress NLP Agent  │   │
 │   │  4. Disaster Simulation Agent       15. Autonomous Satellite Tasking     │   │
 │   │  5. Dynamic Route Planning Agent    16. Telecom Mesh COW Agent           │   │
 │   │  6. Traffic Congestion Agent        17. Relief Shelter Capacity Agent    │   │
@@ -85,8 +85,8 @@
 Create a `.env` file in the `backend/` directory:
 
 ```ini
-NIM_API_KEY=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
-NIM_VL_API_KEY=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
+NIM_API_KEY=******************************************
+NIM_VL_API_KEY=**********************************************
 ```
 
 ### 2. Launch Backend API Server
