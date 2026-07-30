@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { MapContainer, TileLayer, Polyline, CircleMarker, ImageOverlay } from "react-leaflet";
+import { MapContainer, TileLayer, Polyline, CircleMarker, ImageOverlay, useMapEvents } from "react-leaflet";
 import { Play, Upload, Send, Bot, Navigation, RefreshCw, X } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "../components/ui/Card";
 
@@ -12,6 +12,17 @@ interface DashboardPageProps {
   onRunPipeline: (payload?: any) => Promise<any>;
   onUploadImage: (file: File) => Promise<any>;
   onSegmentImage?: (b64: string) => Promise<any>;
+}
+
+function LocationMarker({ trappedLocation, setTrappedLocation }: { trappedLocation: [number, number] | null, setTrappedLocation: (loc: [number, number]) => void }) {
+  useMapEvents({
+    click(e) {
+      setTrappedLocation([e.latlng.lat, e.latlng.lng]);
+    },
+  });
+  return trappedLocation ? (
+    <CircleMarker center={trappedLocation} radius={8} pathOptions={{ color: "#F59E0B", fillColor: "#F59E0B", fillOpacity: 0.9, weight: 2 }} />
+  ) : null;
 }
 
 export const DashboardPage: React.FC<DashboardPageProps> = ({
@@ -29,6 +40,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
   const [fileInfo, setFileInfo] = useState<{ name: string; size: string } | null>(null);
   const [isRunning, setIsRunning] = useState(false);
   const [showAiDrawer, setShowAiDrawer] = useState(false);
+  const [trappedLocation, setTrappedLocation] = useState<[number, number] | null>(null);
 
   // Chatbot State
   const [chatMessages, setChatMessages] = useState<Array<{ sender: "user" | "bot"; text: string; time: string }>>([
@@ -84,12 +96,27 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
       const url = URL.createObjectURL(f);
       setImageUrl(url);
       
+      // Clear previous run's data so the map is fresh for the new image
+      setLiveNodes({});
+      setLiveEdges([]);
+      setSafePath([]);
+      setTrappedLocation(null);
+      
       const img = new window.Image();
       img.onload = () => {
+        let width = img.width;
+        let height = img.height;
+        const max_dim = 1024;
+        if (Math.max(width, height) > max_dim) {
+          const scale = max_dim / Math.max(width, height);
+          width = Math.floor(width * scale);
+          height = Math.floor(height * scale);
+        }
+
         const baseLat = 37.7749;
         const baseLng = -122.4194;
-        const south = baseLat - (img.height / 10000.0);
-        const east = baseLng + (img.width / 10000.0);
+        const south = baseLat - (height / 10000.0);
+        const east = baseLng + (width / 10000.0);
         setImageBounds([[south, baseLng], [baseLat, east]]);
       };
       img.src = url;
@@ -113,11 +140,15 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
         const res = await onUploadImage(selectedFile);
         uploadedImageB64 = res?.result?.image_b64;
       }
-      const pipelineRes = await onRunPipeline({
+      const payload: any = {
         image_b64: uploadedImageB64,
         disaster_type: selectedHazard,
         severity: Math.max(1, Math.floor(severityPct / 10))
-      });
+      };
+      if (trappedLocation) {
+        payload.trapped_location = trappedLocation;
+      }
+      const pipelineRes = await onRunPipeline(payload);
       const graphId = pipelineRes?.result?.graph_id || "sample_graph_default";
       const sPath = pipelineRes?.result?.safe_path || [];
       setSafePath(sPath.map(String));
@@ -245,10 +276,19 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                             setImageUrl(url);
                             const img = new window.Image();
                             img.onload = () => {
+                              let width = img.width;
+                              let height = img.height;
+                              const max_dim = 1024;
+                              if (Math.max(width, height) > max_dim) {
+                                const scale = max_dim / Math.max(width, height);
+                                width = Math.floor(width * scale);
+                                height = Math.floor(height * scale);
+                              }
+                      
                               const baseLat = 37.7749;
                               const baseLng = -122.4194;
-                              const south = baseLat - (img.height / 10000.0);
-                              const east = baseLng + (img.width / 10000.0);
+                              const south = baseLat - (height / 10000.0);
+                              const east = baseLng + (width / 10000.0);
                               setImageBounds([[south, baseLng], [baseLat, east]]);
                             };
                             img.src = url;
@@ -277,6 +317,10 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
 
               {/* Hazard Presets */}
               <div>
+                <div style={{ backgroundColor: "rgba(245, 158, 11, 0.1)", border: "1px solid #F59E0B", padding: "8px", borderRadius: "6px", marginBottom: "12px" }}>
+                  <span style={{ fontSize: "0.7rem", color: "#F59E0B", display: "block", marginBottom: "4px", fontFamily: "var(--mono-font)", fontWeight: 700 }}>TRAPPED CIVILIANS</span>
+                  <span style={{ fontSize: "0.65rem", color: "#F0F6FC" }}>{trappedLocation ? `Location Set: ${trappedLocation[0].toFixed(4)}, ${trappedLocation[1].toFixed(4)}` : "Click anywhere on the map to place."}</span>
+                </div>
                 <span style={{ fontSize: "0.7rem", fontWeight: 600, color: "#8B949E", display: "block", marginBottom: "6px", fontFamily: "var(--mono-font)" }}>
                   DISASTER MODE
                 </span>
@@ -396,7 +440,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
           </div>
 
           <div style={{ flex: 1, minHeight: "480px", position: "relative", overflow: "hidden", borderRadius: "0 0 12px 12px" }}>
-            {Object.keys(liveNodes).length === 0 && (
+            {Object.keys(liveNodes).length === 0 && !imageUrl && (
               <div
                 style={{
                   position: "absolute",
@@ -429,6 +473,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
               {!imageUrl && (
                 <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" attribution="&copy; OpenStreetMap &copy; CARTO" />
               )}
+              <LocationMarker trappedLocation={trappedLocation} setTrappedLocation={setTrappedLocation} />
               
               {/* Display uploaded image directly on map */}
               {imageUrl && imageBounds && (
