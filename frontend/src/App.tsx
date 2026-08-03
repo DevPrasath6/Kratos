@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "sonner";
 import { Navbar } from "./components/Navbar";
@@ -149,6 +149,22 @@ export const App: React.FC = () => {
     return data;
   };
 
+  const handleRunRoutePlanning = useCallback(async (payload: any) => {
+    const resp = await fetch(`${BACKEND_URL}/api/agents/route_planning/run`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    if (!resp.ok) {
+      const err = await resp.json();
+      throw new Error(err.detail || "Route planning failed");
+    }
+    const data = await resp.json();
+    await fetchStatus();
+    await fetchLogs();
+    return data;
+  }, []);
+
   const handleGenerateReport = async () => {
     const resp = await fetch(`${BACKEND_URL}/api/agents/report`);
     if (!resp.ok) {
@@ -178,6 +194,7 @@ export const App: React.FC = () => {
                   onRunPipeline={handleRunPipeline}
                   onUploadImage={handleUploadImage}
                   onSegmentImage={handleSegmentImage}
+                  onRunRoutePlanning={handleRunRoutePlanning}
                 />
               }
             />

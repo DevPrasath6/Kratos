@@ -188,7 +188,7 @@ class ReportGenerationAgent(BaseAgent):
             story.append(Spacer(1, 6))
             
             for agent_name, data in extended_data.items():
-                story.append(Paragraph(agent_name.replace("_", " ").title(), styles["Heading3"]))
+                story.append(Paragraph(str(agent_name).replace("_", " ").title(), styles["Heading3"]))
                 
                 if isinstance(data, dict):
                     table_data = []
@@ -197,7 +197,7 @@ class ReportGenerationAgent(BaseAgent):
                         val_str = str(v)
                         if len(val_str) > 80:
                             val_str = val_str[:77] + "..."
-                        table_data.append([k.replace("_", " ").capitalize(), val_str])
+                        table_data.append([str(k).replace("_", " ").capitalize(), val_str])
                         
                     if table_data:
                         sub_table = Table(table_data, colWidths=[150, 300])

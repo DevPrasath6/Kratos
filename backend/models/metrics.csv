@@ -1,0 +1,2 @@
+epoch,train_loss,val_loss,train_iou,train_dice,val_iou,val_dice,val_precision,val_recall,val_f1,val_pixel_accuracy,learning_rate,epoch_seconds,pos_weight
+1,0.253066,0.187398,0.407342,0.578881,0.542291,0.703228,0.625624,0.802811,0.703228,0.971334,0.0001,767.38,22.5893

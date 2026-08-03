@@ -1,30 +1,37 @@
 import base64
 import io
-import os
 import json
-import numpy as np
+from pathlib import Path
+from typing import Any, Dict, List, Optional
+
 import cv2
-import torch
-import torchvision.transforms as T
-from PIL import Image
-from typing import Any, Dict, List
+import numpy as np
 from agents.base import BaseAgent
 from agents.nim_client import vision_client, NIM_API_KEY
-from models.road_seg_model import KRATOSRoadSegModel
+from infer import RoadSegmentationInferencer
 
-_road_model = None
-_device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+_road_inferencer: Optional[RoadSegmentationInferencer] = None
 
-def _get_road_model():
-    global _road_model
-    if _road_model is None:
-        model_path = os.path.join(os.path.dirname(__file__), "..", "models", "kratos_finetuned_segmentation.pt")
-        model = KRATOSRoadSegModel().to(_device)
-        if os.path.exists(model_path):
-            model.load_state_dict(torch.load(model_path, map_location=_device))
-        model.eval()
-        _road_model = model
-    return _road_model
+
+def _get_road_inferencer() -> Optional[RoadSegmentationInferencer]:
+    global _road_inferencer
+    if _road_inferencer is not None:
+        return _road_inferencer
+
+    backend_dir = Path(__file__).resolve().parent.parent
+    checkpoint_path = backend_dir / "models" / "best_model.pt"
+    if not checkpoint_path.exists():
+        latest_path = backend_dir / "models" / "latest.pt"
+        if latest_path.exists():
+            checkpoint_path = latest_path
+        else:
+            return None
+
+    try:
+        _road_inferencer = RoadSegmentationInferencer(checkpoint_path=checkpoint_path)
+    except Exception:
+        _road_inferencer = None
+    return _road_inferencer
 
 
 class RoadExtractionAgent(BaseAgent):
@@ -80,35 +87,40 @@ class RoadExtractionAgent(BaseAgent):
             except Exception:
                 pass  # Fallback to OpenCV on any error
 
-        # PyTorch model inference path
-        return self._pytorch_inference(image_b64, input_data)
+        inferencer = _get_road_inferencer()
+        if inferencer is not None:
+            try:
+                prediction = inferencer.predict_b64(image_b64)
+                res = dict(input_data) if input_data else {}
+                res.update({
+                    "segments": prediction.segments,
+                    "source": "pytorch_model",
+                    "confidence": prediction.confidence,
+                    "binary_mask_shape": list(prediction.binary_mask.shape),
+                    "graph": prediction.graph,
+                })
+                return res
+            except Exception:
+                pass
 
-    def _pytorch_inference(self, image_b64: str, input_data: Dict[str, Any] = None) -> Dict[str, Any]:
-        """PyTorch Model Inference + OpenCV Post-Processing."""
+        return self._cv_fallback(image_b64, input_data)
+
+    def _cv_fallback(self, image_b64: str, input_data: Dict[str, Any] = None) -> Dict[str, Any]:
+        """Classical CV fallback for environments without trained segmentation weights."""
         try:
-            model = _get_road_model()
-            
             img_bytes = base64.b64decode(image_b64)
-            image = Image.open(io.BytesIO(img_bytes)).convert("RGB")
-            
-            transform = T.Compose([
-                T.Resize((256, 256)),
-                T.ToTensor(),
-                T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-            ])
-            
-            input_tensor = transform(image).unsqueeze(0).to(_device)
-            
-            with torch.no_grad():
-                output = model(input_tensor)
-                mask = (output > 0.5).float().squeeze().cpu().numpy()
-                
-            original_width, original_height = image.size
-            mask_uint8 = (mask * 255).astype(np.uint8)
-            mask_resized = cv2.resize(mask_uint8, (original_width, original_height), interpolation=cv2.INTER_NEAREST)
-            
+            image_array = cv2.imdecode(np.frombuffer(img_bytes, dtype=np.uint8), cv2.IMREAD_COLOR)
+            if image_array is None:
+                raise ValueError("Unable to decode input image.")
+            gray = cv2.cvtColor(image_array, cv2.COLOR_BGR2GRAY)
+            blurred = cv2.GaussianBlur(gray, (5, 5), 0)
+            edges = cv2.Canny(blurred, 40, 120)
+            kernel = np.ones((3, 3), np.uint8)
+            cleaned = cv2.morphologyEx(edges, cv2.MORPH_CLOSE, kernel, iterations=2)
+            cleaned = cv2.morphologyEx(cleaned, cv2.MORPH_OPEN, kernel, iterations=1)
+
             lines = cv2.HoughLinesP(
-                mask_resized,
+                cleaned,
                 rho=1,
                 theta=np.pi / 180,
                 threshold=5,
@@ -124,14 +136,10 @@ class RoadExtractionAgent(BaseAgent):
                     segments.append([x1, y1, x2, y2])
 
             res = dict(input_data) if input_data else {}
-            res.update({
-                "segments": segments,
-                "source": "pytorch_model",
-                "confidence": 0.9,
-            })
+            res.update({"segments": segments, "source": "cv_fallback", "confidence": 0.5})
             return res
         except Exception as e:
-            print(f"PyTorch inference failed: {e}")
+            print(f"CV fallback failed: {e}")
             res = dict(input_data) if input_data else {}
-            res.update({"segments": [], "source": "pytorch_model_error", "confidence": 0.0})
+            res.update({"segments": [], "source": "cv_fallback_error", "confidence": 0.0})
             return res
